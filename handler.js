@@ -1,7 +1,13 @@
+var EventEmitter = require('events').EventEmitter;
+var util = require('util');
+
 var handler = function(socket, store){
+	EventEmitter.call(this);
 	this.socket = socket;
 	this.store = store;
+	this.on('tick', this.tick);
 }
+util.inherits(handler, EventEmitter);
 
 var pro = handler.prototype;
 

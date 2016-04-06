@@ -6,7 +6,7 @@ var handlermanager = new handlermanagertype.create();
 
 setInterval(function(){
 	for(var key in handlermanager.handlers){
-		handlermanager.handlers[key].tick();
+		handlermanager.handlers[key].emit('tick');
 	}
 }, 1000);
 
