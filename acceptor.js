@@ -35,7 +35,7 @@ pro.listen = function(port){
   	});
 
   	this.on('connection', function(argu){
-  		this.whenconn(argu.s, this);
+  		this.whenconn(argu.s, this.mailbox);
   	});
 };
 

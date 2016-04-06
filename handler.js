@@ -1,10 +1,10 @@
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
-var handler = function(socket, store, mgr){
+var handler = function(socket, mailbox, mgr){
 	EventEmitter.call(this);
 	this.socket = socket;
-	this.store = store;
+	this.mailbox = mailbox;
 	this.on('tick', this.tick);
 	this.mgr = mgr;
 }
@@ -19,13 +19,13 @@ pro.tick = function(){
 
 pro.hand = function(){
 	console.log("handler hand");
-	var msg = this.store.mailbox[this.socket.id].shift();
+	var msg = this.mailbox[this.socket.id].shift();
 	this.socket.send(msg);
-	
+
 	msg = this.mgr.decodemsg(msg);
 	console.log(msg);
 }
 
-module.exports.create = function(socket, store, mgr){
-	return new handler(socket, store, mgr);
+module.exports.create = function(socket, mailbox, mgr){
+	return new handler(socket, mailbox, mgr);
 }

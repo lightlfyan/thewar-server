@@ -10,8 +10,8 @@ setInterval(function(){
 	}
 }, 1000);
 
-var srv = acp.create({}, function(s, store){
-	var hand = handler.create(s, store, handlermanager);
+var srv = acp.create({}, function(s, mailbox){
+	var hand = handler.create(s, mailbox, handlermanager);
 	handlermanager.addhander(s.id, hand);
 }, function(s, store){
 	var hand = handlermanager.handlers[s.id];
