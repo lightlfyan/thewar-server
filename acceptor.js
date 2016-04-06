@@ -2,10 +2,11 @@ var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 var sio = require('socket.io');
 
-var Acceptor = function (opts, cb){
+var Acceptor = function (opts, whenconn, cb){
 	EventEmitter.call(this);
 	this.sockets = {};
 	this.mailbox = {};
+	this.whenconn = whenconn;
 	this.cb = cb;
 };
 util.inherits(Acceptor, EventEmitter);
@@ -21,7 +22,7 @@ pro.listen = function(port){
 
   	this.server.sockets.on('connection', function(socket){
   		self.sockets[socket.id] = socket;
-  		self.emit('connection', {id: socket.id, ip: socket.handshake.address});
+  		self.emit('connection', {s: socket});
   		socket.on('message', function(pkg){
   			processmsg(socket, self, pkg);
   		});
@@ -32,7 +33,7 @@ pro.listen = function(port){
   	});
 
   	this.on('connection', function(argu){
-  		console.log(argu);
+  		this.whenconn(argu.s, this);
   	});
 };
 
@@ -56,6 +57,6 @@ var processmsg = function (socket, acceptor, msg){
 }
 
 
-module.exports.create = function (opts, cb) {
-	return new Acceptor(opts || {}, cb);
+module.exports.create = function (opts, whenconn, cb) {
+	return new Acceptor(opts || {}, whenconn, cb);
 }
