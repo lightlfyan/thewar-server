@@ -1,0 +1,8 @@
+package game;
+
+message Move 
+ { 
+    required int32    msgid = 1;  // ID 
+    required int32    x = 2;  // str 
+    required int32    y = 3;  // str 
+ }

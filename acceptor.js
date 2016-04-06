@@ -2,12 +2,13 @@ var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 var sio = require('socket.io');
 
-var Acceptor = function (opts, whenconn, cb){
+var Acceptor = function (opts, whenconn, cb, whenclose){
 	EventEmitter.call(this);
 	this.sockets = {};
 	this.mailbox = {};
 	this.whenconn = whenconn;
 	this.cb = cb;
+	this.whenclose = whenclose;
 };
 util.inherits(Acceptor, EventEmitter);
 
@@ -29,6 +30,7 @@ pro.listen = function(port){
   		socket.on('disconnect', function(reason){
   			delete self.sockets[socket.id];
   			delete self.mailbox[socket.id];
+  			self.whenclose(socket.id);
   		});
   	});
 
@@ -57,6 +59,6 @@ var processmsg = function (socket, acceptor, msg){
 }
 
 
-module.exports.create = function (opts, whenconn, cb) {
-	return new Acceptor(opts || {}, whenconn, cb);
+module.exports.create = function (opts, whenconn, cb, whenclose) {
+	return new Acceptor(opts || {}, whenconn, cb, whenclose);
 }
